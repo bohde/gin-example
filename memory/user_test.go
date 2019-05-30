@@ -4,9 +4,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/joshbohde/example"
 	"github.com/joshbohde/example/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestUserService(t *testing.T) {
@@ -17,7 +18,7 @@ func TestUserService(t *testing.T) {
 		addresses := mocks.NewMockAddressService(ctrl)
 
 		users := UserService{
-			users: map[int]example.User{
+			Users: map[int]example.User{
 				1: example.User{ID: 1, Name: "Josh"},
 			},
 			AddressService: addresses,
@@ -61,7 +62,7 @@ func TestUserService(t *testing.T) {
 		addresses := mocks.NewMockAddressService(ctrl)
 
 		users := UserService{
-			users: map[int]example.User{
+			Users: map[int]example.User{
 				1: example.User{ID: 1, Name: "Josh"},
 			},
 			AddressService: addresses,
@@ -87,7 +88,7 @@ func TestUserService(t *testing.T) {
 		addresses := mocks.NewMockAddressService(ctrl)
 
 		users := UserService{
-			users: map[int]example.User{
+			Users: map[int]example.User{
 				1: example.User{ID: 1, Name: "Josh"},
 			},
 			AddressService: addresses,

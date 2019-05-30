@@ -5,9 +5,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/joshbohde/example"
 	"github.com/joshbohde/example/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestUserHandler_Get(t *testing.T) {

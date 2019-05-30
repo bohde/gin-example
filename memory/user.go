@@ -1,14 +1,16 @@
 package memory
 
-import "github.com/joshbohde/example"
+import (
+	"github.com/joshbohde/example"
+)
 
 type UserService struct {
-	users          map[int]example.User
+	Users          map[int]example.User
 	AddressService example.AddressService
 }
 
 func (u *UserService) User(id int) (*example.User, error) {
-	user, ok := u.users[id]
+	user, ok := u.Users[id]
 	if !ok {
 		return nil, example.NotFound{}
 	}
