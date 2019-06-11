@@ -12,68 +12,66 @@ import (
 )
 
 func TestUserHandler_Get(t *testing.T) {
-	t.Run("Success", func(t *testing.T) {
-		ctx := NewTestContext().
-			SetParam("id", "1")
+	type user struct {
+		user *example.User
+		err  error
+	}
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+	type out struct {
+		status int
+		body   interface{}
+	}
 
-		users := mocks.NewMockUserService(ctrl)
+	u := &example.User{ID: 1, Name: "Josh"}
 
-		user := &example.User{ID: 1, Name: "Josh"}
+	cases := map[string]struct {
+		param    string
+		user     *user
+		expected out
+	}{
+		"Success": {
+			param:    "1",
+			user:     &user{user: u},
+			expected: out{status: http.StatusOK, body: u},
+		},
+		"InvalidID": {
+			param:    "abc",
+			expected: out{status: http.StatusNotFound},
+		},
+		"UserNotFound": {
+			param:    "1",
+			user:     &user{err: example.NotFound{}},
+			expected: out{status: http.StatusNotFound},
+		},
+		"Error": {
+			param:    "1",
+			user:     &user{err: assert.AnError},
+			expected: out{status: http.StatusInternalServerError},
+		},
+	}
 
-		users.EXPECT().User(1).Return(user, nil)
+	for id, c := range cases {
+		t.Run(id, func(t *testing.T) {
+			ctx := NewTestContext().
+				SetParam("id", c.param)
 
-		UserHandler{UserService: users}.Get(ctx.Context)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-		ctx.AssertStatus(t, http.StatusOK)
-		ctx.AssertJSONBodyEquals(t, user)
-	})
+			users := mocks.NewMockUserService(ctrl)
 
-	t.Run("Invalid id", func(t *testing.T) {
-		ctx := NewTestContext().
-			SetParam("id", "abc")
+			if c.user != nil {
+				users.EXPECT().User(1).Return(c.user.user, c.user.err)
+			}
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+			UserHandler{UserService: users}.Get(ctx.Context)
 
-		users := mocks.NewMockUserService(ctrl)
+			ctx.AssertStatus(t, c.expected.status)
 
-		UserHandler{UserService: users}.Get(ctx.Context)
+			if c.expected.body != nil {
+				ctx.AssertJSONBodyEquals(t, c.expected.body)
+			}
+		})
 
-		ctx.AssertStatus(t, http.StatusNotFound)
-	})
-
-	t.Run("Missing user", func(t *testing.T) {
-		ctx := NewTestContext().
-			SetParam("id", "1")
-
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		users := mocks.NewMockUserService(ctrl)
-
-		users.EXPECT().User(1).Return(nil, example.NotFound{})
-
-		UserHandler{UserService: users}.Get(ctx.Context)
-
-		ctx.AssertStatus(t, http.StatusNotFound)
-	})
-
-	t.Run("Error", func(t *testing.T) {
-		ctx := NewTestContext().
-			SetParam("id", "1")
-
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		users := mocks.NewMockUserService(ctrl)
-
-		users.EXPECT().User(1).Return(nil, assert.AnError)
-
-		UserHandler{UserService: users}.Get(ctx.Context)
-
-		ctx.AssertStatus(t, http.StatusInternalServerError)
-	})
+	}
 }

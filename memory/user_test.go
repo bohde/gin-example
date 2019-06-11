@@ -11,96 +11,65 @@ import (
 )
 
 func TestUserService(t *testing.T) {
-	t.Run("User", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+	type addr struct {
+		address *example.Address
+		err     error
+	}
 
-		addresses := mocks.NewMockAddressService(ctrl)
+	type out struct {
+		user *example.User
+		err  error
+	}
 
-		users := UserService{
-			Users: map[int]example.User{
-				1: example.User{ID: 1, Name: "Josh"},
-			},
-			AddressService: addresses,
-		}
+	address := example.Address{ID: 2, Street: "Foo", ZipCode: "Baz"}
 
-		address := example.Address{ID: 2, Street: "Foo", ZipCode: "Baz"}
+	cases := map[string]struct {
+		userID   int   // User ID to search for
+		address  *addr // The potentially nil addr to return
+		expected out   // the expected
+	}{
+		"Good": {
+			userID:   1,
+			address:  &addr{address: &address},
+			expected: out{user: &example.User{ID: 1, Name: "Josh", Address: &address}},
+		},
+		"UserNotFound": {
+			userID:   2,
+			expected: out{err: example.NotFound{}},
+		},
+		"AddressNotFound": {
+			userID:   1,
+			address:  &addr{err: example.NotFound{}},
+			expected: out{user: &example.User{ID: 1, Name: "Josh"}},
+		},
+		"AddressErrors": {
+			userID:   1,
+			address:  &addr{err: assert.AnError},
+			expected: out{err: assert.AnError},
+		},
+	}
 
-		addresses.EXPECT().AddressForUserId(1).Return(&address, nil)
+	for id, c := range cases {
 
-		expected := example.User{
-			ID:      1,
-			Name:    "Josh",
-			Address: &address,
-		}
-		user, err := users.User(1)
+		t.Run(id, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
 
-		assert.Nil(t, err)
-		assert.Equal(t, &expected, user)
+			addresses := mocks.NewMockAddressService(ctrl)
 
-	})
+			users := UserService{
+				Users: map[int]example.User{
+					1: example.User{ID: 1, Name: "Josh"},
+				},
+				AddressService: addresses,
+			}
 
-	t.Run("Not Found", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
+			if c.address != nil {
+				addresses.EXPECT().AddressForUserId(c.userID).Return(c.address.address, c.address.err)
+			}
+			user, err := users.User(c.userID)
 
-		addresses := mocks.NewMockAddressService(ctrl)
-
-		users := UserService{
-			AddressService: addresses,
-		}
-		user, err := users.User(1)
-
-		assert.Equal(t, example.NotFound{}, err)
-		assert.Nil(t, user)
-	})
-
-	t.Run("Address Not Found", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		addresses := mocks.NewMockAddressService(ctrl)
-
-		users := UserService{
-			Users: map[int]example.User{
-				1: example.User{ID: 1, Name: "Josh"},
-			},
-			AddressService: addresses,
-		}
-
-		addresses.EXPECT().AddressForUserId(1).Return(nil, example.NotFound{})
-
-		expected := example.User{
-			ID:   1,
-			Name: "Josh",
-		}
-		user, err := users.User(1)
-
-		assert.Nil(t, err)
-		assert.Equal(t, &expected, user)
-
-	})
-
-	t.Run("Address Errors", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		addresses := mocks.NewMockAddressService(ctrl)
-
-		users := UserService{
-			Users: map[int]example.User{
-				1: example.User{ID: 1, Name: "Josh"},
-			},
-			AddressService: addresses,
-		}
-
-		addresses.EXPECT().AddressForUserId(1).Return(nil, assert.AnError)
-
-		user, err := users.User(1)
-
-		assert.Nil(t, user)
-		assert.Equal(t, err, assert.AnError)
-
-	})
-
+			assert.Equal(t, c.expected, out{user, err})
+		})
+	}
 }
