@@ -1,5 +1,7 @@
 package example
 
+import "context"
+
 //go:generate mockgen -source=address.go -package=mocks -destination=mocks/address.go
 
 type Address struct {
@@ -9,5 +11,5 @@ type Address struct {
 }
 
 type AddressService interface {
-	AddressForUserId(id int) (*Address, error)
+	AddressForUserId(ctx context.Context, id int) (*Address, error)
 }

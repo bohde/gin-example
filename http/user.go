@@ -22,7 +22,7 @@ func (h UserHandler) Get(c *gin.Context) {
 		return
 	}
 
-	user, err := h.User(int(id))
+	user, err := h.User(c.Request.Context(), int(id))
 
 	if err != nil {
 		switch err.(type) {

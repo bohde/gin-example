@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -55,6 +56,8 @@ func TestUserService(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
+			ctx := context.Background()
+
 			addresses := mocks.NewMockAddressService(ctrl)
 
 			users := UserService{
@@ -65,9 +68,9 @@ func TestUserService(t *testing.T) {
 			}
 
 			if c.address != nil {
-				addresses.EXPECT().AddressForUserId(c.userID).Return(c.address.address, c.address.err)
+				addresses.EXPECT().AddressForUserId(ctx, c.userID).Return(c.address.address, c.address.err)
 			}
-			user, err := users.User(c.userID)
+			user, err := users.User(ctx, c.userID)
 
 			assert.Equal(t, c.expected, out{user, err})
 		})

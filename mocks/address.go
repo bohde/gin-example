@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	gomock "github.com/golang/mock/gomock"
 	example "github.com/joshbohde/example"
 	reflect "reflect"
@@ -34,16 +35,16 @@ func (m *MockAddressService) EXPECT() *MockAddressServiceMockRecorder {
 }
 
 // AddressForUserId mocks base method
-func (m *MockAddressService) AddressForUserId(id int) (*example.Address, error) {
+func (m *MockAddressService) AddressForUserId(ctx context.Context, id int) (*example.Address, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddressForUserId", id)
+	ret := m.ctrl.Call(m, "AddressForUserId", ctx, id)
 	ret0, _ := ret[0].(*example.Address)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AddressForUserId indicates an expected call of AddressForUserId
-func (mr *MockAddressServiceMockRecorder) AddressForUserId(id interface{}) *gomock.Call {
+func (mr *MockAddressServiceMockRecorder) AddressForUserId(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddressForUserId", reflect.TypeOf((*MockAddressService)(nil).AddressForUserId), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddressForUserId", reflect.TypeOf((*MockAddressService)(nil).AddressForUserId), ctx, id)
 }

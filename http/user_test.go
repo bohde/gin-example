@@ -61,7 +61,7 @@ func TestUserHandler_Get(t *testing.T) {
 			users := mocks.NewMockUserService(ctrl)
 
 			if c.user != nil {
-				users.EXPECT().User(1).Return(c.user.user, c.user.err)
+				users.EXPECT().User(ctx.Context.Request.Context(), 1).Return(c.user.user, c.user.err)
 			}
 
 			UserHandler{users}.Get(ctx.Context)

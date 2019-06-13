@@ -1,5 +1,7 @@
 package example
 
+import "context"
+
 //go:generate mockgen -source=user.go -package=mocks -destination=mocks/user.go
 
 type User struct {
@@ -9,5 +11,5 @@ type User struct {
 }
 
 type UserService interface {
-	User(id int) (*User, error)
+	User(ctx context.Context, id int) (*User, error)
 }

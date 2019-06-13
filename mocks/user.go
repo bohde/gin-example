@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	gomock "github.com/golang/mock/gomock"
 	example "github.com/joshbohde/example"
 	reflect "reflect"
@@ -34,16 +35,16 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 }
 
 // User mocks base method
-func (m *MockUserService) User(id int) (*example.User, error) {
+func (m *MockUserService) User(ctx context.Context, id int) (*example.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "User", id)
+	ret := m.ctrl.Call(m, "User", ctx, id)
 	ret0, _ := ret[0].(*example.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // User indicates an expected call of User
-func (mr *MockUserServiceMockRecorder) User(id interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) User(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "User", reflect.TypeOf((*MockUserService)(nil).User), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "User", reflect.TypeOf((*MockUserService)(nil).User), ctx, id)
 }

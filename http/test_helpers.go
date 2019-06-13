@@ -19,6 +19,8 @@ func NewTestContext() *TestContext {
 	rec := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(rec)
 
+	c.Request = httptest.NewRequest("GET", "/", nil)
+
 	return &TestContext{
 		Recorder: rec,
 		Context:  c,

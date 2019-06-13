@@ -1,6 +1,8 @@
 package memory
 
 import (
+	"context"
+
 	"github.com/joshbohde/example"
 )
 
@@ -9,13 +11,13 @@ type UserService struct {
 	example.AddressService
 }
 
-func (u *UserService) User(id int) (*example.User, error) {
+func (u *UserService) User(ctx context.Context, id int) (*example.User, error) {
 	user, ok := u.Users[id]
 	if !ok {
 		return nil, example.NotFound{}
 	}
 
-	address, err := u.AddressForUserId(id)
+	address, err := u.AddressForUserId(ctx, id)
 	if err != nil {
 		switch err.(type) {
 		case example.NotFound:
