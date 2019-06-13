@@ -34,17 +34,17 @@ func (m *MockAddressService) EXPECT() *MockAddressServiceMockRecorder {
 	return m.recorder
 }
 
-// AddressForUserId mocks base method
-func (m *MockAddressService) AddressForUserId(ctx context.Context, id int) (*example.Address, error) {
+// AddressForUserID mocks base method
+func (m *MockAddressService) AddressForUserID(ctx context.Context, id int) (*example.Address, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddressForUserId", ctx, id)
+	ret := m.ctrl.Call(m, "AddressForUserID", ctx, id)
 	ret0, _ := ret[0].(*example.Address)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// AddressForUserId indicates an expected call of AddressForUserId
-func (mr *MockAddressServiceMockRecorder) AddressForUserId(ctx, id interface{}) *gomock.Call {
+// AddressForUserID indicates an expected call of AddressForUserID
+func (mr *MockAddressServiceMockRecorder) AddressForUserID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddressForUserId", reflect.TypeOf((*MockAddressService)(nil).AddressForUserId), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddressForUserID", reflect.TypeOf((*MockAddressService)(nil).AddressForUserID), ctx, id)
 }

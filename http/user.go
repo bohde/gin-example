@@ -22,14 +22,14 @@ func (h UserHandler) Get(c *gin.Context) {
 		return
 	}
 
-	user, err := h.User(c.Request.Context(), int(id))
+	user, err := h.User(c.Request.Context(), id)
 
 	if err != nil {
 		switch err.(type) {
 		case example.NotFound:
 			c.AbortWithStatus(http.StatusNotFound)
 		default:
-			c.AbortWithError(http.StatusInternalServerError, err)
+			_ = c.AbortWithError(http.StatusInternalServerError, err)
 		}
 		return
 	}

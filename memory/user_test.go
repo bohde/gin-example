@@ -51,7 +51,7 @@ func TestUserService(t *testing.T) {
 	}
 
 	for id, c := range cases {
-
+		c := c
 		t.Run(id, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
@@ -68,7 +68,7 @@ func TestUserService(t *testing.T) {
 			}
 
 			if c.address != nil {
-				addresses.EXPECT().AddressForUserId(ctx, c.userID).Return(c.address.address, c.address.err)
+				addresses.EXPECT().AddressForUserID(ctx, c.userID).Return(c.address.address, c.address.err)
 			}
 			user, err := users.User(ctx, c.userID)
 

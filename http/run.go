@@ -19,6 +19,6 @@ func (s *Server) Run(port int) {
 
 	engine.GET("/users/:id", users.Get)
 
-	engine.Run(":" + strconv.Itoa(port))
+	_ = engine.Run(":" + strconv.Itoa(port))
 
 }

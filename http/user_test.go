@@ -51,6 +51,7 @@ func TestUserHandler_Get(t *testing.T) {
 	}
 
 	for id, c := range cases {
+		c := c
 		t.Run(id, func(t *testing.T) {
 			ctx := NewTestContext().
 				SetParam("id", c.param)

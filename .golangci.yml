@@ -1,0 +1,13 @@
+linters:
+  enable:
+    - bodyclose
+    - dupl
+    - goconst
+    - goimports
+    - golint
+    - gosec
+    - maligned
+    - prealloc
+    - scopelint
+    - unconvert
+    - unparam

@@ -17,7 +17,7 @@ func (u *UserService) User(ctx context.Context, id int) (*example.User, error) {
 		return nil, example.NotFound{}
 	}
 
-	address, err := u.AddressForUserId(ctx, id)
+	address, err := u.AddressForUserID(ctx, id)
 	if err != nil {
 		switch err.(type) {
 		case example.NotFound:

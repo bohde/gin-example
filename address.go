@@ -11,5 +11,5 @@ type Address struct {
 }
 
 type AddressService interface {
-	AddressForUserId(ctx context.Context, id int) (*Address, error)
+	AddressForUserID(ctx context.Context, id int) (*Address, error)
 }
