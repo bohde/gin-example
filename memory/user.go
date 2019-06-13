@@ -5,8 +5,8 @@ import (
 )
 
 type UserService struct {
-	Users          map[int]example.User
-	AddressService example.AddressService
+	Users map[int]example.User
+	example.AddressService
 }
 
 func (u *UserService) User(id int) (*example.User, error) {
@@ -15,7 +15,7 @@ func (u *UserService) User(id int) (*example.User, error) {
 		return nil, example.NotFound{}
 	}
 
-	address, err := u.AddressService.AddressForUserId(id)
+	address, err := u.AddressForUserId(id)
 	if err != nil {
 		switch err.(type) {
 		case example.NotFound:

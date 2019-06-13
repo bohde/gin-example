@@ -10,7 +10,7 @@ import (
 )
 
 type UserHandler struct {
-	UserService example.UserService
+	example.UserService
 }
 
 func (h UserHandler) Get(c *gin.Context) {
@@ -22,7 +22,7 @@ func (h UserHandler) Get(c *gin.Context) {
 		return
 	}
 
-	user, err := h.UserService.User(int(id))
+	user, err := h.User(int(id))
 
 	if err != nil {
 		switch err.(type) {

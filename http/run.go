@@ -8,14 +8,14 @@ import (
 )
 
 type Server struct {
-	AddressService example.AddressService
-	UserService    example.UserService
+	example.AddressService
+	example.UserService
 }
 
 func (s *Server) Run(port int) {
 	engine := gin.Default()
 
-	users := UserHandler{UserService: s.UserService}
+	users := UserHandler{UserService: s}
 
 	engine.GET("/users/:id", users.Get)
 

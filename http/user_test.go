@@ -64,7 +64,7 @@ func TestUserHandler_Get(t *testing.T) {
 				users.EXPECT().User(1).Return(c.user.user, c.user.err)
 			}
 
-			UserHandler{UserService: users}.Get(ctx.Context)
+			UserHandler{users}.Get(ctx.Context)
 
 			ctx.AssertStatus(t, c.expected.status)
 
